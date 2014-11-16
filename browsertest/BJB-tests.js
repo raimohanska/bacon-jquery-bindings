@@ -1,7 +1,7 @@
 var expect = chai.expect
 
-describe('bacon.jquery', function() {
-  describe('textFieldValue', function() {
+describe('bacon-dom', function() {
+  describe('textField.value', function() {
     var field
     beforeEach(function() {
       $('#bacon-dom').html('<input type="text" id="text" value="defaultVal">')
@@ -10,28 +10,28 @@ describe('bacon.jquery', function() {
 
     describe('with initVal', function() {
       it('sets value to DOM', function() {
-          var model = Bacon.$.textFieldValue(field, 'initVal')
+          var model = Bacon.$.textField.value(field, 'initVal')
           expect(field.val()).to.equal('initVal')
       })
       it('sets the initVal as the initial value of the model', function() {
-        var model = Bacon.$.textFieldValue(field, 'initVal')
+        var model = Bacon.$.textField.value(field, 'initVal')
         specifyValue(model, 'initVal')
       })
     })
 
     describe('without initVal', function() {
       it('leaves DOM unaffected', function() {
-          var model = Bacon.$.textFieldValue(field)
+          var model = Bacon.$.textField.value(field)
           expect(field.val()).to.equal('defaultVal')
       })
       it('uses value from DOM as initial value of the model', function() {
-        var model = Bacon.$.textFieldValue(field)
+        var model = Bacon.$.textField.value(field)
         specifyValue(model, 'defaultVal')
       })
       describe('with empty default value', function() {
         it('waits for browser to autofill textfield', function(done) {
           field.val('')
-          var model = Bacon.$.textFieldValue(field)
+          var model = Bacon.$.textField.value(field)
           model.filter(function (v) {
               return v
           }).onValue(function() {
@@ -45,21 +45,21 @@ describe('bacon.jquery', function() {
 
     describe('when setting value of model', function() {
       it('sets value to DOM', function() {
-          Bacon.$.textFieldValue(field).set('newVal')
+          Bacon.$.textField.value(field).set('newVal')
           expect(field.val()).to.equal('newVal')
       })
     })
 
     describe('when DOM value changes', function() {
       it('updates value of model', function() {
-        var model = Bacon.$.textFieldValue(field)
+        var model = Bacon.$.textField.value(field)
         field.val("newVal")
         field.trigger("keyup")
         specifyValue(model, "newVal")
       })
 
       it('ignores duplicates', function() {
-        var model = Bacon.$.textFieldValue(field)
+        var model = Bacon.$.textField.value(field)
         field.val("newVal")
         field.trigger("keyup")
         specifyValue(model, "newVal")
@@ -72,13 +72,13 @@ describe('bacon.jquery', function() {
 
     describe('when element is not found', function() {
       it('returns empty string as value', function() {
-        var model = Bacon.$.textFieldValue($('.asdfqwer'))
+        var model = Bacon.$.textField.value($('.asdfqwer'))
         specifyValue(model, '')
       })
     })
   })
 
-  describe('checkBoxValue', function() {
+  describe('checkBox.value', function() {
     var field
     beforeEach(function() {
       $('#bacon-dom').html('<input type="checkbox" id="checkbox">')
@@ -87,52 +87,52 @@ describe('bacon.jquery', function() {
 
     describe('with initVal', function() {
       it('sets value to DOM', function() {
-          var model = Bacon.$.checkBoxValue(field, true)
+          var model = Bacon.$.checkBox.value(field, true)
           expect(field.prop("checked")).to.equal(true)
       })
       it('sets the initVal as the initial value of the model', function() {
-        var model = Bacon.$.checkBoxValue(field, true)
+        var model = Bacon.$.checkBox.value(field, true)
         specifyValue(model, true)
       })
     })
 
     describe('without initVal', function() {
       it('leaves DOM unaffected', function() {
-          var model = Bacon.$.checkBoxValue(field)
+          var model = Bacon.$.checkBox.value(field)
           expect(field.prop("checked")).to.equal(false)
       })
       it('uses value from DOM as initial value of the model', function() {
-        var model = Bacon.$.checkBoxValue(field)
+        var model = Bacon.$.checkBox.value(field)
         specifyValue(model, false)
       })
     })
 
     describe('when setting value of model', function() {
       it('sets value to DOM', function() {
-          Bacon.$.checkBoxValue(field).set(true)
+          Bacon.$.checkBox.value(field).set(true)
           expect(field.prop("checked")).to.equal(true)
       })
       it('leaves defaultChecked property as is', function() {
-          Bacon.$.checkBoxValue(field).set(true)
+          Bacon.$.checkBox.value(field).set(true)
           expect(field.prop("defaultChecked")).to.equal(false)
       })
     })
     describe('when DOM value changes', function() {
       it('updates value of model', function() {
-        var model = Bacon.$.checkBoxValue(field)
+        var model = Bacon.$.checkBox.value(field)
         field.trigger("click")
         specifyValue(model, true)
       })
     })
     describe('when element is not found', function() {
       it('returns false as value', function() {
-        var model = Bacon.$.checkBoxValue($('.asdfqwer'))
+        var model = Bacon.$.checkBox.value($('.asdfqwer'))
         specifyValue(model, false)
       })
     })
   })
 
-  describe('selectValue', function() {
+  describe('select.value', function() {
     var field
     beforeEach(function() {
       $('#bacon-dom').html('<select id="select"><option value="a">A</option><option value="b" selected>B</option></select>')
@@ -141,35 +141,35 @@ describe('bacon.jquery', function() {
 
     describe('with initVal', function() {
       it('sets value to DOM', function() {
-        var model = Bacon.$.selectValue(field, 'a')
+        var model = Bacon.$.select.value(field, 'a')
         expect(field.val()).to.equal('a')
       })
       it('sets the initVal as the initial value of the model', function() {
-        var model = Bacon.$.selectValue(field, 'a')
+        var model = Bacon.$.select.value(field, 'a')
         specifyValue(model, 'a')
       })
     })
 
     describe('without initVal', function() {
       it('leaves DOM unaffected', function() {
-        var model = Bacon.$.selectValue(field)
+        var model = Bacon.$.select.value(field)
         expect(field.val()).to.equal('b')
       })
       it('uses value from DOM as initial value of the model', function() {
-        var model = Bacon.$.selectValue(field)
+        var model = Bacon.$.select.value(field)
         specifyValue(model, 'b')
       })
     })
 
     describe('when setting value of model', function() {
       it('sets value to DOM', function() {
-        Bacon.$.selectValue(field).set('a')
+        Bacon.$.select.value(field).set('a')
         expect(field.val()).to.equal('a')
       })
     })
     describe('when DOM value changes', function() {
       it('updates value of model', function() {
-        var model = Bacon.$.selectValue(field)
+        var model = Bacon.$.select.value(field)
         field.val("a")
         field.trigger("change")
         specifyValue(model, "a")
@@ -177,28 +177,28 @@ describe('bacon.jquery', function() {
     })
   })
 
-  describe('selectValue without any options', function() {
+  describe('select.value without any options', function() {
     it('sets `null` as initial value of the model', function() {
       $('#bacon-dom').html('<select id="select"></select>')
-      var model = Bacon.$.selectValue($('#bacon-dom #select'))
+      var model = Bacon.$.select.value($('#bacon-dom #select'))
       specifyValue(model, null)
     })
   })
 
-  describe('selectValue when element is not found', function() {
+  describe('select.value when element is not found', function() {
     it('sets `undefined` as initial value of the model', function() {
-      var model = Bacon.$.selectValue($('.asdfqwer'))
+      var model = Bacon.$.select.value($('.asdfqwer'))
       specifyValue(model, undefined)
     })
   })
 
-  describe('radioGroupValue', function() {
-    testRadioGroupValueModel(Bacon.$.radioGroupValue, "a", "b")
+  describe('radioGroup.value', function() {
+    testradioGroup.valueModel(Bacon.$.radioGroup.value, "a", "b")
   })
 
-  describe('intRadioGroupValue', function() {
-    testRadioGroupValueModel(Bacon.$.intRadioGroupValue, 1, 2)
-    testRadioGroupValueModel(Bacon.$.intRadioGroupValue, 0, 23)
+  describe('radioGroup.intValue', function() {
+    testradioGroup.valueModel(Bacon.$.radioGroup.intValue, 1, 2)
+    testradioGroup.valueModel(Bacon.$.radioGroup.intValue, 0, 23)
   })
 
   testEventHelper('click')

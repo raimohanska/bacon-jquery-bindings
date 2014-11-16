@@ -1,9 +1,9 @@
 {
-  "name": "bacon.jquery",
-  "version": "0.4.11",
-  "main": "dist/bacon.jquery.js",
+  "name": "bacon-dom",
+  "version": "0.5.0",
+  "main": "dist/bacon-dom.js",
   "scripts": [
-    "dist/bacon.jquery.js"
+    "dist/bacon-dom.js"
   ],
   "dependencies":{
   	"baconjs/bacon.js":"*"

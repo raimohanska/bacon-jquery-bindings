@@ -1,17 +1,21 @@
 {
-  "name": "bacon.jquery",
-  "version": "0.4.11",
-  "author": "Juha Paananen",
+  "name": "bacon-dom",
+  "version": "0.5.0",
+  "authors": [
+    "Juha Paananen",
+    "Kristian Mandrup"
+  ],
   "licenses": [
     "MIT"
   ],
   "dependencies": {
-    "baconjs": "~0.7.8"
+    "baconjs": ">=0.7.8"
   },
   "devDependencies": {
-    "coffee-script": "1.4.0",
-    "mocha": "~1.17",
-    "chai": "1.9.0",
+    "ender": "x",
+    "coffee-script": ">=1.4.0",
+    "mocha": ">=1.17",
+    "chai": ">=1.9.0",
     "grunt": "0.4.1",
     "grunt-cli": "0.1.13",
     "grunt-contrib-coffee": "~0.10.0",
@@ -20,12 +24,14 @@
     "grunt-contrib-uglify": "~0.2.2",
     "phantomjs": "~1",
     "mocha-phantomjs": "~3.3",
-    "jquery": "~2",
-    "bacon.model": "~0.1.6"
+    "bacon.model": ">=0.1.6"
   },
   "scripts": {
     "test": "./run-tests",
     "prepublish": "node_modules/grunt-cli/bin/grunt"
   },
-  "main": "dist/bacon.jquery.js"
+  "main": [
+    "dist/bacon-dom.js",
+    "dist/bacon-dom.min.js"
+  ]
 }
