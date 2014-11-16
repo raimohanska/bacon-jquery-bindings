@@ -1,0 +1,19 @@
+## Changelog
+
+### 0.5.0
+
+- remove hard dependency on jQuery (allows you to use ZeptoJS, EnderJS or a similar alternative)
+- rename to *bacon.query*
+- allow init() function to be called without $ having been defined
+- introduce: Bacon.$.Selector, Bacon.$.Request and Bacon.$.Promise for better customization
+
+- Bacon.$.Selector, Bacon.$.Request and Bacon.$.Promise can be set at any time to point to
+  jQuery compatible APIs (similar to jQuery $)
+
+- Bacon.$.Selector must just point to a function which given a selector string can find an element
+
+- Bacon.$.Request must just point to an object with a jQuery compatible `ajax` method
+
+- Bacon.$.Promise can alternatively be set to any Promise/A+ compatible lib.
+  It will to use `deferred()` and fall-back to `Deferred()`
+  It will then use `notify()`, `resolve()` and `reject()` on the deferred

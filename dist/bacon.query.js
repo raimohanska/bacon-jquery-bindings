@@ -1,54 +1,48 @@
 (function() {
-  var $, Bacon, BaconModel, init,
+  var Bacon, BaconModel, init,
     __slice = [].slice;
 
   init = function(Bacon, BaconModel, $) {
-    var asJQueryObject, assertArrayOrJQueryObject, e, effectNames, effects, eventNames, events, nonEmpty, _, _fn, _fn1, _i, _j, _len, _len1;
+    var altIndxOf, asQueryObject, assertArrayOrQueryObject, e, effectNames, effects, eventNames, events, indxOf, nonEmpty, _fn, _fn1, _i, _j, _len, _len1;
+    $ = $ || {};
     nonEmpty = function(x) {
       return x.length > 0;
     };
-    assertArrayOrJQueryObject = function(x) {
-      if (!(x instanceof jQuery || x instanceof Array)) {
-        throw new Error('Value must be either a jQuery object or an Array of jQuery objects');
+    assertArrayOrQueryObject = function(x) {
+      if (!(typeof x === 'object' || x instanceof Array)) {
+        throw new Error('Value must be either an object or an Array of objects which conform to a minimal element query interface');
       }
     };
-    asJQueryObject = function(x) {
-      var element, obj, _i, _len;
-      if (x instanceof jQuery) {
-        return x;
-      } else {
-        obj = $();
-        for (_i = 0, _len = x.length; _i < _len; _i++) {
-          element = x[_i];
-          if (element instanceof jQuery) {
-            obj = obj.add(element);
-          }
+    asQueryObject = function(x) {
+      return Bacon.$.Selector.toQueryObj(x);
+    };
+    altIndxOf = function(xs, x) {
+      var i, y, _i, _len;
+      for (i = _i = 0, _len = xs.length; _i < _len; i = ++_i) {
+        y = xs[i];
+        if (x === y) {
+          return i;
         }
-        return obj;
       }
+      return -1;
     };
-    _ = {
-      indexOf: Array.prototype.indexOf ? function(xs, x) {
-        return xs.indexOf(x);
-      } : function(xs, x) {
-        var i, y, _i, _len;
-        for (i = _i = 0, _len = xs.length; _i < _len; i = ++_i) {
-          y = xs[i];
-          if (x === y) {
-            return i;
-          }
-        }
-        return -1;
-      }
+    indxOf = function(xs, x) {
+      return xs.indexOf(x);
     };
+    Bacon.$.indexOf = Array.prototype.indexOf ? indxOf : altIndxOf;
     Bacon.$.Model = Bacon.Model;
-    Bacon.$.textFieldValue = function(element, initValue) {
-      var autofillPoller, events, get;
+    Bacon.$.Selector = $;
+    Bacon.$.Request = $;
+    Bacon.$.Promise = $;
+    Bacon.$.Extender = $.fn;
+    Bacon.$.textFieldValue = function(element, options) {
+      var autofillPoller, events, get, initValue;
+      initValue = options.init;
       get = function() {
         return element.val() || "";
       };
       autofillPoller = function() {
-        return Bacon.interval(50).take(10).map(get).filter(nonEmpty).take(1);
+        return Bacon.interval(options.interval || 50).take(options.take || 10).map(get).filter(nonEmpty).take(1);
       };
       events = element.asEventStream("keyup input").merge(element.asEventStream("cut paste").delay(1)).merge(autofillPoller());
       return Bacon.Binding({
@@ -60,7 +54,9 @@
         }
       });
     };
-    Bacon.$.checkBoxValue = function(element, initValue) {
+    Bacon.$.checkBoxValue = function(element, options) {
+      var initValue;
+      initValue = options.init;
       return Bacon.Binding({
         initValue: initValue,
         get: function() {
@@ -72,7 +68,9 @@
         }
       });
     };
-    Bacon.$.selectValue = function(element, initValue) {
+    Bacon.$.selectValue = function(element, options) {
+      var initValue;
+      initValue = options.init;
       return Bacon.Binding({
         initValue: initValue,
         get: function() {
@@ -84,9 +82,11 @@
         }
       });
     };
-    Bacon.$.radioGroupValue = function(radios, initValue) {
-      assertArrayOrJQueryObject(radios);
-      radios = asJQueryObject(radios);
+    Bacon.$.radioGroupValue = function(radios, options) {
+      var initValue;
+      initValue = options.init;
+      assertArrayOrQueryObject(radios);
+      radios = Bacon.$.asQueryObject(radios);
       return Bacon.Binding({
         initValue: initValue,
         get: function() {
@@ -95,13 +95,14 @@
         events: radios.asEventStream("change"),
         set: function(value) {
           return radios.each(function(i, elem) {
-            return $(elem).prop("checked", elem.value === value);
+            return Bacon.$.Selector(elem).prop("checked", elem.value === value);
           });
         }
       });
     };
-    Bacon.$.intRadioGroupValue = function(radios, initValue) {
-      var radioGroupValue;
+    Bacon.$.intRadioGroupValue = function(radios, options) {
+      var initValue, radioGroupValue;
+      initValue = options.init;
       radioGroupValue = Bacon.$.radioGroupValue(radios);
       return Bacon.Binding({
         initValue: initValue,
@@ -122,26 +123,28 @@
         }
       });
     };
-    Bacon.$.checkBoxGroupValue = function(checkBoxes, initValue) {
-      assertArrayOrJQueryObject(checkBoxes);
-      checkBoxes = asJQueryObject(checkBoxes);
+    Bacon.$.checkBoxGroupValue = function(checkBoxes, options) {
+      var initValue;
+      initValue = options.init;
+      assertArrayOrQueryObject(checkBoxes);
+      checkBoxes = asQueryObject(checkBoxes);
       return Bacon.Binding({
         initValue: initValue,
         get: function() {
           return checkBoxes.filter(":checked").map(function(i, elem) {
-            return $(elem).val();
+            return Bacon.$.Selector(elem).val();
           }).toArray();
         },
         events: checkBoxes.asEventStream("change"),
         set: function(value) {
           return checkBoxes.each(function(i, elem) {
-            return $(elem).prop("checked", _.indexOf(value, $(elem).val()) >= 0);
+            return $(elem).prop("checked", Bacon.$.indexOf(value, Bacon.$.Selector(elem).val()) >= 0);
           });
         }
       });
     };
     Bacon.$.ajax = function(params, abort) {
-      return Bacon.fromPromise($.ajax(params), abort);
+      return Bacon.fromPromise(Bacon.$.Request.ajax(params), abort);
     };
     Bacon.$.ajaxGet = function(url, data, dataType, abort) {
       return Bacon.$.ajax({
@@ -180,7 +183,7 @@
     Bacon.Observable.prototype.toDeferred = function() {
       var dfd, value;
       value = void 0;
-      dfd = $.Deferred();
+      dfd = Bacon.$.Promise.deferred() || $.Deferred();
       this.take(1).endOnError().subscribe(function(evt) {
         if (evt.hasValue()) {
           value = evt.value();
@@ -219,10 +222,10 @@
       e = effectNames[_j];
       _fn1(e);
     }
-    if ($ != null ? $.fn : void 0) {
-      $.fn.extend(events);
-      $.fn.extend(effects);
-      $.fn.asEventStream = Bacon.$.asEventStream;
+    if (Bacon.$.Extender) {
+      Bacon.$.Extender.extend(events);
+      Bacon.$.Extender.extend(effects);
+      Bacon.$.Extender.asEventStream = Bacon.$.asEventStream;
     }
     return Bacon.$;
   };
@@ -230,11 +233,10 @@
   if (typeof module !== "undefined" && module !== null) {
     Bacon = require("baconjs");
     BaconModel = require("bacon.model");
-    $ = require("jquery");
     module.exports = init(Bacon, BaconModel, $);
   } else {
     if (typeof define === "function" && define.amd) {
-      define(["bacon", "bacon.model", "jquery"], init);
+      define(["bacon", "bacon.model", $], init);
     } else {
       init(this.Bacon, this.BaconModel, this.$);
     }

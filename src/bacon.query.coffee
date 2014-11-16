@@ -1,31 +1,36 @@
 init = (Bacon, BaconModel, $) ->
+  $ = $ || {}
   nonEmpty = (x) -> x.length > 0
-  assertArrayOrJQueryObject = (x) ->
-    unless x instanceof jQuery or x instanceof Array
-      throw new Error('Value must be either a jQuery object or an Array of jQuery objects')
-  asJQueryObject = (x) ->
-    if x instanceof jQuery then x
-    else
-      obj = $()
-      obj = obj.add(element) for element in x when element instanceof jQuery
-      obj
-  _ = {
-  indexOf: if Array::indexOf
-    (xs, x) -> xs.indexOf(x)
-  else
-    (xs, x) ->
-      for y, i in xs
-        return i if x == y
-      -1
-  }
+
+  assertArrayOrQueryObject = (x) ->
+    unless typeof x is 'object' or x instanceof Array
+      throw new Error('Value must be either an object or an Array of objects which conform to a minimal element query interface')
+
+  asQueryObject = (x) ->
+    Bacon.$.Selector.toQueryObj(x)
+
+  altIndxOf = (xs, x) ->
+    for y, i in xs
+      return i if x == y
+    -1
+
+  indxOf = (xs, x) -> xs.indexOf(x)
+
+  Bacon.$.indexOf = if Array::indexOf then indxOf else altIndxOf
 
   Bacon.$.Model = Bacon.Model
 
+  Bacon.$.Selector = $
+  Bacon.$.Request = $
+  Bacon.$.Promise = $
+  Bacon.$.Extender = $.fn
+
   # Input element bindings
-  Bacon.$.textFieldValue = (element, initValue) ->
+  Bacon.$.textFieldValue = (element, options) ->
+    initValue = options.init
     get = -> element.val() || ""
     autofillPoller = ->
-      Bacon.interval(50).take(10).map(get).filter(nonEmpty).take 1
+      Bacon.interval(options.interval || 50).take(options.take || 10).map(get).filter(nonEmpty).take 1
     events = element.asEventStream("keyup input")
       .merge(element.asEventStream("cut paste").delay(1))
       .merge(autofillPoller())
@@ -36,7 +41,8 @@ init = (Bacon, BaconModel, $) ->
       events,
       set: (value) -> element.val(value)
     }
-  Bacon.$.checkBoxValue = (element, initValue) ->
+  Bacon.$.checkBoxValue = (element, options) ->
+    initValue = options.init
     Bacon.Binding {
       initValue,
       get: -> element.prop("checked")||false,
@@ -44,7 +50,8 @@ init = (Bacon, BaconModel, $) ->
       set: (value) -> element.prop "checked", value
     }
 
-  Bacon.$.selectValue = (element, initValue) ->
+  Bacon.$.selectValue = (element, options) ->
+    initValue = options.init
     Bacon.Binding {
       initValue,
       get: -> element.val(),
@@ -52,19 +59,21 @@ init = (Bacon, BaconModel, $) ->
       set: (value) -> element.val value
     }
 
-  Bacon.$.radioGroupValue = (radios, initValue) ->
-    assertArrayOrJQueryObject(radios)
-    radios = asJQueryObject(radios)
+  Bacon.$.radioGroupValue = (radios, options) ->
+    initValue = options.init
+    assertArrayOrQueryObject(radios)
+    radios = Bacon.$.asQueryObject(radios)
     Bacon.Binding {
       initValue,
       get: -> radios.filter(":checked").first().val(),
       events: radios.asEventStream("change"),
       set: (value) ->
         radios.each (i, elem) ->
-          $(elem).prop "checked", elem.value is value
+          Bacon.$.Selector(elem).prop "checked", elem.value is value
     }
 
-  Bacon.$.intRadioGroupValue = (radios, initValue) ->
+  Bacon.$.intRadioGroupValue = (radios, options) ->
+    initValue = options.init
     radioGroupValue = Bacon.$.radioGroupValue(radios)
     Bacon.Binding {
       initValue,
@@ -83,32 +92,46 @@ init = (Bacon, BaconModel, $) ->
         radioGroupValue.set strValue
     }
 
-  Bacon.$.checkBoxGroupValue = (checkBoxes, initValue) ->
-    assertArrayOrJQueryObject(checkBoxes)
-    checkBoxes = asJQueryObject(checkBoxes)
+  Bacon.$.checkBoxGroupValue = (checkBoxes, options) ->
+    initValue = options.init
+    assertArrayOrQueryObject(checkBoxes)
+    checkBoxes = asQueryObject(checkBoxes)
     Bacon.Binding {
       initValue,
       get: ->
-        checkBoxes.filter(":checked").map((i, elem) -> $(elem).val()).toArray()
+        checkBoxes.filter(":checked").map((i, elem) -> Bacon.$.Selector(elem).val()).toArray()
       events: checkBoxes.asEventStream("change"),
       set: (value) ->
         checkBoxes.each (i, elem) ->
-          $(elem).prop "checked", _.indexOf(value, $(elem).val()) >= 0
+          $(elem).prop "checked", Bacon.$.indexOf(value, Bacon.$.Selector(elem).val()) >= 0
     }
 
   # AJAX
-  Bacon.$.ajax = (params, abort) -> Bacon.fromPromise $.ajax(params), abort
-  Bacon.$.ajaxGet = (url, data, dataType, abort) -> Bacon.$.ajax({url, dataType, data}, abort)
-  Bacon.$.ajaxGetJSON = (url, data, abort) -> Bacon.$.ajax({url, dataType: "json", data}, abort)
-  Bacon.$.ajaxPost = (url, data, dataType, abort) -> Bacon.$.ajax({url, dataType, data, type: "POST"}, abort)
-  Bacon.$.ajaxGetScript = (url, abort) -> Bacon.$.ajax({url, dataType: "script"}, abort)
-  Bacon.$.lazyAjax = (params) -> Bacon.once(params).flatMap(Bacon.$.ajax)
-  Bacon.Observable::ajax = -> @flatMapLatest Bacon.$.ajax
+  Bacon.$.ajax = (params, abort) ->
+    Bacon.fromPromise Bacon.$.Request.ajax(params), abort
 
-  # jQuery Deferred
+  Bacon.$.ajaxGet = (url, data, dataType, abort) ->
+    Bacon.$.ajax({url, dataType, data}, abort)
+
+  Bacon.$.ajaxGetJSON = (url, data, abort) ->
+    Bacon.$.ajax({url, dataType: "json", data}, abort)
+
+  Bacon.$.ajaxPost = (url, data, dataType, abort) ->
+    Bacon.$.ajax({url, dataType, data, type: "POST"}, abort)
+
+  Bacon.$.ajaxGetScript = (url, abort) ->
+    Bacon.$.ajax({url, dataType: "script"}, abort)
+
+  Bacon.$.lazyAjax = (params) ->
+    Bacon.once(params).flatMap(Bacon.$.ajax)
+
+  Bacon.Observable::ajax = ->
+    @flatMapLatest Bacon.$.ajax
+
+  # Deferred/Promise
   Bacon.Observable::toDeferred = ->
     value = undefined
-    dfd = $.Deferred()
+    dfd = Bacon.$.Promise.deferred() || $.Deferred()
     @take(1).endOnError().subscribe((evt) ->
         if evt.hasValue()
           value = evt.value()
@@ -120,8 +143,7 @@ init = (Bacon, BaconModel, $) ->
         )
     dfd
 
-  # jQuery DOM Events
-
+  # DOM Events (jQuery compatible)
   eventNames = [
     "keydown", "keyup", "keypress",
     "click", "dblclick", "mousedown", "mouseup",
@@ -133,36 +155,37 @@ init = (Bacon, BaconModel, $) ->
     "load", "unload" ]
   events = {}
 
-  for e in eventNames 
+  for e in eventNames
     do (e) ->
       events[e + 'E'] = (args...) -> @asEventStream e, args...
 
-  # jQuery Effects
+  # Effects (jQuery compatible)
 
   effectNames = [
     "animate", "show", "hide", "toggle",
     "fadeIn", "fadeOut", "fadeTo", "fadeToggle",
     "slideDown", "slideUp", "slideToggle" ]
+
   effects = {}
 
-  for e in effectNames 
+  for e in effectNames
     do (e) ->
       effects[e + 'E'] = (args...) -> Bacon.fromPromise @[e](args...).promise()
 
-  if $?.fn
-    $.fn.extend events
-    $.fn.extend effects
-    $.fn.asEventStream = Bacon.$.asEventStream 
+  if Bacon.$.Extender
+    Bacon.$.Extender.extend events
+    Bacon.$.Extender.extend effects
+    Bacon.$.Extender.asEventStream = Bacon.$.asEventStream
 
+  # return the full API
   Bacon.$
 
 if module?
   Bacon = require("baconjs")
   BaconModel = require("bacon.model")
-  $ = require("jquery")
   module.exports = init(Bacon, BaconModel, $)
 else
   if typeof define == "function" and define.amd
-    define ["bacon", "bacon.model", "jquery"], init
+    define ["bacon", "bacon.model", $], init
   else
-    init(this.Bacon, this.BaconModel, this.$)
+    init(@Bacon, @BaconModel, @$)
