@@ -6,12 +6,12 @@ module.exports = (grunt) ->
 
     coffee:
       compile:
-        files: ["dist/bacon.query.js": "src/*.coffee"]
+        files: ["dist/bacon-dom.js": "src/*.coffee"]
 
     uglify:
       dist:
-        src: "dist/*.js"
-        dest: "dist/*.min.js"
+        src: "dist/bacon-dom.js"
+        dest: "dist/bacon-dom.min.js"
 
   grunt.loadNpmTasks "grunt-contrib-coffee"
   grunt.loadNpmTasks "grunt-contrib-clean"

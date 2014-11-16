@@ -11,6 +11,6 @@
     "bacon": "~0.6",
     "bacon.model": "~0.1",
     "requirejs": "2.1.6",
-    "bacon.jquery": "~0"
+    "bacon-dom": "~0"
   }
 }

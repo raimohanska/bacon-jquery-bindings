@@ -1,4 +1,4 @@
-# bacon.query
+# bacon-dom
 
 A JQuery compatible (JQC) data binding library for [Bacon.js](https://github.com/baconjs/bacon.js).
 
@@ -31,7 +31,7 @@ It provides the same functionality, with the addition of two-way bound Models, m
 
 ## Example Applications
 
-There are example applications in the [examples](https://github.com/baconjs/bacon.query/tree/master/examples) directory, each with a README.md describing how they are started.
+There are example applications in the [examples](https://github.com/baconjs/bacon-dom/tree/master/examples) directory, each with a README.md describing how they are started.
 
 Each application does essentially the same thing and the code in the example applications is essentially just this:
 
@@ -51,7 +51,7 @@ Each application does essentially the same thing and the code in the example app
 
 ## API
 
-The `bacon.query` API consists of methods for creating a `Model` representing the
+The `bacon-dom` API consists of methods for creating a `Model` representing the
 state of a DOM element or a group of DOM elements. This API is published
 as `Bacon.$`, and the same object is returned when using AMD or
 CommonJS.
@@ -232,16 +232,16 @@ but extends that API with [bacon.model](https://github.com/baconjs/bacon.model) 
 
 ## Use with AMD / RequireJS
 
-The [requirejs example-app](https://github.com/baconjs/bacon.query/tree/master/examples/requirejs) uses RequireJS, like this:
+The [requirejs example-app](https://github.com/baconjs/bacon-dom/tree/master/examples/requirejs) uses RequireJS, like this:
 
 ```js
 require.config({
   paths: {
-    "bacon.query": "../dist/bacon.query",
+    "bacon-dom": "../dist/bacon-dom",
     "bacon": "components/bacon/dist/Bacon",
     "jquery": "components/jquery/jquery"
   }})
-require(["bacon.query", "jquery"], function(bjq, $) {
+require(["bacon-dom", "jquery"], function(bjq, $) {
   left = bjq.textFieldValue($("#left"))
   right = bjq.textFieldValue($("#right"))
   right.bind(left)
@@ -251,36 +251,36 @@ require(["bacon.query", "jquery"], function(bjq, $) {
 
 Note: You can substitute jquery with Zepto or any other compatible library ;)
 
-The prebuilt javascript file can be found in the `dist` directory, or [here](https://raw.github.com/baconjs/bacon.query/master/dist/Bacon.Query.Bindings.js).
+The prebuilt javascript file can be found in the `dist` directory, or [here](https://raw.github.com/baconjs/bacon-dom/master/dist/bacon-dom.Bindings.js).
 
 The API can be accessed using `Bacon.$` or like in the above example.
 
 ## Use without AMD
 
-The [plain example-app](https://github.com/baconjs/bacon.query/tree/master/examples/plain) uses RequireJS, like this:
+The [plain example-app](https://github.com/baconjs/bacon-dom/tree/master/examples/plain) uses RequireJS, like this:
 
 So feel free to use plain old `<script>` tags to include Bacon, and JQC lib and BJQ.
 
 The BJQ methods are exposed through `Bacon.$`, so you can call them as in `Bacon.$.textFieldValue(..)`.
 
-The prebuilt javascript file can be found in the `dist` directory, or [here](https://raw.github.com/baconjs/bacon.query/master/dist/Bacon.Query.Bindings.js).
+The prebuilt javascript file can be found in the `dist` directory, or [here](https://raw.github.com/baconjs/bacon-dom/master/dist/bacon-dom.Bindings.js).
 
-There's a [plain example-app](https://github.com/baconjs/bacon.query/tree/master/examples/plain) that uses script tags only.
+There's a [plain example-app](https://github.com/baconjs/bacon-dom/tree/master/examples/plain) that uses script tags only.
 
 ## Use with Node / Browserify
 
-BJQ is registered in the NPM repository as `bacon.query` and works fine with [node-browserify](https://github.com/substack/node-browserify).
+BJQ is registered in the NPM repository as `bacon-dom` and works fine with [node-browserify](https://github.com/substack/node-browserify).
 
-See the [browserify example-app](https://github.com/baconjs/bacon.query/tree/master/examples/browserify) for an example.
+See the [browserify example-app](https://github.com/baconjs/bacon-dom/tree/master/examples/browserify) for an example.
 
 ## Use with Bower
 
-Registered to the Bower registry as `bacon.query`. See the
-Example Applications, for instance [requirejs example-app](https://github.com/baconjs/bacon.query/tree/master/examples/requirejs).
+Registered to the Bower registry as `bacon-dom`. See the
+Example Applications, for instance [requirejs example-app](https://github.com/baconjs/bacon-dom/tree/master/examples/requirejs).
 
 ## Building
 
-The `bacon.query` module is built using NPM and Grunt.
+The `bacon-dom` module is built using NPM and Grunt.
 
 To build, use `npm install`.
 
@@ -298,11 +298,11 @@ The browser tests can also be run by opening the
 
 The tests are also run automatically on [Travis CI](https://travis-ci.org/). See build status below.
 
-[![Build Status](https://travis-ci.org/baconjs/bacon.query.png)](https://travis-ci.org/baconjs/bacon.query)
+[![Build Status](https://travis-ci.org/baconjs/bacon-dom.png)](https://travis-ci.org/baconjs/bacon-dom)
 
 ## What next?
 
-See [Issues](https://github.com/baconjs/bacon.query/issues).
+See [Issues](https://github.com/baconjs/bacon-dom/issues).
 
 If this seems like a good idea, please tell me so! If you'd like to
 contribute, please do! Pull Requests, Issues etc appreciated. Star this project to let me know that you care.

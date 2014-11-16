@@ -1,6 +1,6 @@
 expect = require("chai").expect
 
-bjq = require "../src/bacon.jquery"
+bjq = require "../src/bacon-dom"
 
 twice = (x) -> x * 2
 Bacon = require "baconjs"

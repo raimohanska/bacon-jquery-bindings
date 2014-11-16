@@ -1,11 +1,11 @@
 require.config({
   paths: {
     "bacon.model": "bower_components/bacon.model/dist/bacon.model",
-    "bacon.jquery": "bower_components/bacon.jquery/dist/bacon.jquery",
+    "bacon-dom": "bower_components/bacon-dom/dist/bacon-dom",
     "bacon": "bower_components/bacon/dist/Bacon",
     "jquery": "bower_components/jquery/jquery"
   }})
-require(["bacon.jquery", "jquery"], function(bjq, $) {
+require(["bacon-dom", "jquery"], function(bjq, $) {
   // binding for "left" text field
   var left = bjq.textFieldValue($("#left"))
   // binding for "right" text field

@@ -3,7 +3,7 @@
 ### 0.5.0
 
 - remove hard dependency on jQuery (allows you to use ZeptoJS, EnderJS or a similar alternative)
-- rename to *bacon.query*
+- rename to *bacon-dom*
 - allow init() function to be called without $ having been defined
 - introduce: Bacon.$.Selector, Bacon.$.Request and Bacon.$.Promise for better customization
 - requires `.toJQC(x)` method on JQC (i.e `$` selector)

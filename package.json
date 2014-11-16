@@ -1,5 +1,5 @@
 {
-  "name": "bacon.query",
+  "name": "bacon-dom",
   "version": "0.5.0",
   "authors": [
     "Juha Paananen",
@@ -31,7 +31,7 @@
     "prepublish": "node_modules/grunt-cli/bin/grunt"
   },
   "main": [
-    "dist/bacon.query.js",
-    "dist/bacon.query.min.js"
+    "dist/bacon-dom.js",
+    "dist/bacon-dom.min.js"
   ]
 }
