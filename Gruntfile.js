@@ -10,15 +10,15 @@
         compile: {
           files: [
             {
-              "dist/bacon.query.js": "src/bacon.query.coffee"
+              "dist/bacon.query.js": "src/*.coffee"
             }
           ]
         }
       },
       uglify: {
         dist: {
-          src: "dist/bacon.query.js",
-          dest: "dist/bacon.query.min.js"
+          src: "dist/*.js",
+          dest: "dist/*.min.js"
         }
       }
     });

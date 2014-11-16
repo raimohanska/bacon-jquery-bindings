@@ -60,6 +60,21 @@ Note: The optional initiValue has now been replaced with an (optional) options h
 Instead of `Bacon.$.textFieldValue(field, '')` use `Bacon.$.textFieldValue(field, {init: ''})`.
 This is to allow for more flexibility down the line...
 
+### Plugins
+
+
+- `ajax`
+- `dom-input`
+- `effects`
+- `events`
+- `promise` (deferred)
+
+Use `Bacon.$.plugin('dom-input', 'ajax')` to add the plugins you want to enable.
+
+### DOM Input
+
+`Bacon.$.addPlugin('dom-input')`
+
 ###Bacon.$.textFieldValue(field [, initValue])
 
 Creates a `Model` for an
