@@ -1,6 +1,6 @@
 var Bacon = require("baconjs")
 var $ = require("jquery")
-var bjq = require("bacon-jquery-bindings")
+var bjq = require("bacon.jquery")
 
 $(function() {
   // binding for "left" text field
