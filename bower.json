@@ -2,5 +2,10 @@
   "name": "bacon.jquery",
   "version": "0.4.12",
   "main": "dist/bacon.jquery.js",
+  "dependencies": {
+    "bacon": "~0.7.8",
+    "bacon.model": "~0.1.6",
+    "jquery": "~2"
+  },
   "ignore": ["browsertest", "examples", "src", "test", "./*.*", "build", "release", "run-tests", "version"]
 }

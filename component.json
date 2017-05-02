@@ -6,6 +6,8 @@
     "dist/bacon.jquery.js"
   ],
   "dependencies":{
-  	"baconjs/bacon.js":"*"
+    "baconjs/bacon.js":"*",
+    "baconjs/bacon.model":"*",
+    "jquery/jquery":"*"
   }
 }

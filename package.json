@@ -6,7 +6,9 @@
     "MIT"
   ],
   "dependencies": {
-    "baconjs": "~0.7.8"
+    "bacon.model": "~0.1.6",
+    "baconjs": "~0.7.8",
+    "jquery": "~2"
   },
   "devDependencies": {
     "coffee-script": "1.4.0",
@@ -19,9 +21,7 @@
     "grunt-contrib-copy": "~0.4.0",
     "grunt-contrib-uglify": "~0.2.2",
     "phantomjs": "~1",
-    "mocha-phantomjs": "~3.3",
-    "jquery": "~2",
-    "bacon.model": "~0.1.6"
+    "mocha-phantomjs": "~3.3"
   },
   "scripts": {
     "test": "./run-tests",
